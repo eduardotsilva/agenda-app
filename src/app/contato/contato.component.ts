@@ -15,21 +15,22 @@ export class ContatoComponent implements OnInit {
 
   ngOnInit() {
     this.formulario = this.fb.group({
-      nome: ["",Validators.required],
-      email: ["", Validators.email],
+      nome: ["", Validators.required],
+      email: ["", [Validators.email, Validators.required]],
     });
   }
 
   submit() {
     console.log(this.formulario.value);
 
+    const teste = this.formulario.controls.email.errors.email;
+    console.log(teste);
 
-  
     //this.service.save(c).subscribe(
-     // (response) => {
-      //  console.log(response);
-      //},
-      //(responseError) => {}
+    // (response) => {
+    //  console.log(response);
+    //},
+    //(responseError) => {}
     //);
   }
 }
