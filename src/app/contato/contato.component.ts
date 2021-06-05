@@ -36,6 +36,15 @@ export class ContatoComponent implements OnInit {
     );
   }
 
+  favoritar(contato: Contato) {
+    this.service.favorite(contato).subscribe(
+      (response) => {
+        contato.favorito = !contato.favorito;
+      },
+      (responseError) => {}
+    );
+  }
+
   submit() {
     const formValue = this.formulario.value;
     console.log("formValues ", formValue);
