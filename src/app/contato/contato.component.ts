@@ -4,6 +4,7 @@ import { Contato } from "./contato";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { ContatoDetalheComponent } from "../contato-detalhe/contato-detalhe.component";
+import { PageEvent } from "@angular/material/paginator";
 
 @Component({
   selector: "app-contato",
@@ -15,6 +16,11 @@ export class ContatoComponent implements OnInit {
   contatos: Contato[] = [];
   colunas = ["foto", "id", "nome", "email", "favorito"];
 
+  totalElementos = 0;
+  pagina = 0;
+  tamanho = 2;
+  pageSizeOptions: number[] = [2];
+
   constructor(
     private service: ContatoService,
     private fb: FormBuilder,
@@ -23,7 +29,7 @@ export class ContatoComponent implements OnInit {
 
   ngOnInit() {
     this.montarFormulario();
-    this.listarContatos();
+    this.listarContatos(this.pagina, this.tamanho);
   }
 
   montarFormulario() {
@@ -33,10 +39,12 @@ export class ContatoComponent implements OnInit {
     });
   }
 
-  listarContatos() {
-    this.service.list().subscribe(
+  listarContatos(pagina = 0, tamanho = 0) {
+    this.service.list(pagina, tamanho).subscribe(
       (response) => {
-        this.contatos = response;
+        this.contatos = response.content;
+        this.totalElementos = response.totalElements;
+        this.pagina = response.number;
       },
       (responseError) => {}
     );
@@ -57,7 +65,7 @@ export class ContatoComponent implements OnInit {
 
     this.service.save(contato).subscribe(
       (response) => {
-        this.listarContatos();
+        this.listarContatos(this.pagina, this.tamanho);
       },
       (responseError) => {}
     );
@@ -70,7 +78,7 @@ export class ContatoComponent implements OnInit {
       const formData: FormData = new FormData();
       formData.append("foto", foto);
       this.service.upload(contato, formData).subscribe((response) => {
-        this.listarContatos();
+        this.listarContatos(this.pagina, this.tamanho);
       });
     }
   }
@@ -83,5 +91,10 @@ export class ContatoComponent implements OnInit {
       height: "450px",
       data: contato,
     });
+  }
+
+  paginar(event: PageEvent) {
+    this.pagina = event.pageIndex;
+    this.listarContatos(this.pagina, this.tamanho);
   }
 }
