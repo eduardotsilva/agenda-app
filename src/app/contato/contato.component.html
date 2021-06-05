@@ -16,7 +16,7 @@
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let contato">
             <div *ngIf="contato.foto">
-                <img 
+                <img (click)="visualizarContato(contato)"
                 width="50" 
                 height="50" 
                 src="data:image/jpg;base64,{{ contato.foto }}"
