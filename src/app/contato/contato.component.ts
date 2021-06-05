@@ -47,14 +47,11 @@ export class ContatoComponent implements OnInit {
 
   submit() {
     const formValue = this.formulario.value;
-    console.log("formValues ", formValue);
-
     const contato: Contato = new Contato(formValue.nome, formValue.email);
 
     this.service.save(contato).subscribe(
       (response) => {
-        console.log("response ", response);
-        this.contatos.push(response);
+        this.listarContatos();
       },
       (responseError) => {}
     );
