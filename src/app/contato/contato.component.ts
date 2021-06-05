@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 })
 export class ContatoComponent implements OnInit {
   formulario: FormGroup;
+  contatos: Contato[] = [];
 
   constructor(private service: ContatoService, private fb: FormBuilder) {}
 
@@ -21,16 +22,17 @@ export class ContatoComponent implements OnInit {
   }
 
   submit() {
-    console.log(this.formulario.value);
+    const formValue = this.formulario.value;
+    console.log("formValues ", formValue);
 
-    const teste = this.formulario.controls.email.errors.email;
-    console.log(teste);
+    const contato: Contato = new Contato(formValue.nome, formValue.email);
 
-    //this.service.save(c).subscribe(
-    // (response) => {
-    //  console.log(response);
-    //},
-    //(responseError) => {}
-    //);
+    this.service.save(contato).subscribe(
+      (response) => {
+        console.log('response ',response);
+        this.contatos.push(response);
+      },
+      (responseError) => {}
+    );
   }
 }
